@@ -1,0 +1,313 @@
+%\documentclass[10pt, conference, compsocconf]{IEEEtran}
+\documentclass[conference]{IEEEtran}
+
+%% IEEE MASS 2015
+%% http://ieeexplore.ieee.org/xpl/mostRecentIssue.jsp?punumber=7366896
+
+\usepackage{cite}
+\usepackage[pdftex]{graphicx}
+\usepackage{multirow}
+
+%%% J
+\usepackage[utf8]{inputenc}
+   
+% correct bad hyphenation here
+\hyphenation{op-tical net-works semi-conduc-tor}
+
+\begin{document}
+
+% can use linebreaks \\ within to get better formatting as desired
+\title{Car categorization and context information for packet forwarding in VANETs}
+
+%\author{\IEEEauthorblockN{João Batista Ribeiro\IEEEauthorrefmark{1},
+%Wellington D. Branquinho Junior\IEEEauthorrefmark{1} and
+%Edson dos Santos Moreira\IEEEauthorrefmark{1}}
+%\IEEEauthorblockA{\IEEEauthorrefmark{1}Instituto de Ciências Matemáticas e de Computação (ICMC)\\
+%University of São Paulo (USP)\\
+%São Carlos, Brazil\\
+%Email: \{joao.b, wellington\}@usp.br, edson@icmc.usp.br}
+%}
+
+\author{\IEEEauthorblockN{João Batista Ribeiro,
+Wellington D. Branquinho Junior and
+Edson dos Santos Moreira}
+\IEEEauthorblockA{Instituto de Ciências Matemáticas e de Computação (ICMC)\\
+University of São Paulo (USP)\\
+São Carlos, Brazil\\
+Email: \{joao.b, wellington\}@usp.br, edson@icmc.usp.br}
+}
+
+% make the title area
+\maketitle
+
+\begin{abstract}
+The abstract goes here. DO NOT USE SPECIAL CHARACTERS, SYMBOLS, OR MATH IN YOUR TITLE OR ABSTRACT.
+
+\end{abstract}
+
+%\begin{IEEEkeywords}
+%component; formatting; style; styling; 
+
+%\end{IEEEkeywords}
+
+% For peer review papers, you can put extra information on the cover
+% page as needed:
+% \ifCLASSOPTIONpeerreview
+% \begin{center} \bfseries EDICS Category: 3-BBND \end{center}
+% \fi
+%
+% For peerreview papers, this IEEEtran command inserts a page break and
+% creates the second title. It will be ignored for other modes.
+\IEEEpeerreviewmaketitle
+
+\section{Introduction}
+% no \IEEEPARstart
+Vehicular Ad Hoc Networks (VANETs) are a sub class of Mobile Ad Hoc Networks that deal with nodes moving in high speeds and constant changes in the network topology. Their aims are to enable communication between mobile nodes, disseminate data, and also communicate to an infrastructured network. These networks enable a huge number of applications such as accident avoidance, intelligent traffic control and data dissemination, thereby, providing safety, comfort and convenience to the users \cite{conprova2013}. 
+
+The environment where VANETs are inserted provides information from several sensors, e.g., engine status, GPS position, speed, weather, road and traffic conditions, etc. Vehicles responsible for collecting, disseminating and make use of these context information, connected to Internet or not, are considered context-aware \cite{grilli2009}. Being context-aware helps them to improve the existing systems, and enables the deployment of a vast number of new mobile applications \cite{contory2006}. A reliable and efficient dissemination of information becomes essential and a challenge in VANETs. Therefore, only relevant information can be shared among the vehicles to reduce the overhead generated \cite{kumar2015}. 
+
+One of those information that has been addressed recently in some works, is the vehicle's category like taxi, bus, private car and cargo vehicle. Those different types of vehicles have different mobility patterns, for instance, a bus has its own limited route in a city, it goes in preset points according to a schedule. On the other hand, a taxi has not so limited movement in terms of time and space, taxis move according to  passengers demands and drivers preferences. This information should be used to decide which node suits better to carry a message towards its destination \cite{zhang2012}, \cite{zhang2014}.
+
+An ontology can be used to ensure interoperability among the application in vehicles, and help in the process of share and use of context information \cite{madkour2011}. It helps to represent the different categories of vehicles, how they relate with each other and with the context data, plus to make some reasoning about this information and make a decision in the forwarding process. For instance, the token “busB” would represent a class meaning that the vehicle is a city bus with four axles, with a specific route. This information would be used to choose this node to carry the message, since it is going to pass through the message destination.
+
+This paper considers a scenario where some vehicles create messages to a stationary destination with a globally known position. Thus, in order to deliver the messages, making intelligent forwarding decisions, we implemented five different schemes exploiting varying amounts of context information and a mechanism called \emph{RateTimeToSend} that uses the traffic flow information to decide the rate that messages are forwarded. So, to assess the proposed schemes performance we performed simulations, quantifying the influence of the parameters in the latency, message delivery success rate and the overhead generated. 
+
+%Read some papers to get a better idea to this last paragraph
+This paper is organized as follows...
+
+% You must have at least 2 lines in the paragraph with the drop letter
+% (should never be an issue)
+
+%\subsubsection{Subsubsection Heading Here}
+%Subsubsection text here.
+
+\section{Related Works}
+
+In \cite{magf2009} the authors  proposed an approach based on \cite{gpsr2000}, to deal with rapid topology changes and frequent disconnections. The proposal assumes that the vehicle is aware of its own movement and its neighbors, and uses this information to select the best next hop to carry the message. Simulations, using a combination of position, speed and direction had a significant performance improvement in terms of data delivery ratio and latency.
+
+To deal with the issues mentioned above, a geocast forwarding protocol is proposed in \cite{vcarp2012}. The protocol uses context information in order to make more accurate decision in the forwarding process. Besides that, it has a shared cache mechanism to prevent packet loss due to full caches. Using that mechanism and position, distance to destination and direction in its simulations they achieved a improvement of 40\% in terms of packet delivery ratio. Additionally, the overhead was decreased in 89\% compared to \cite{maihofer2004}.
+
+In \cite{move2005} five opportunistic forwarding schemes were presented and compared in terms of overhead, success rate and latency. The first one is a schema where the vehicle gets the message and carries it to the destination, without exchange data with other nodes. Whereas the second was the opposite, the message was broadcasting to all nodes towards the destination. In the remaining schemes context information was used, firstly the distance, secondly the distance plus the speed and heading, and in the last they changed the previous adding an information to know in which point the node will stop going towards the destination.
+
+In order to better utilize node mobility and deal with connectivity issues, \emph{GeoMob} \cite{zhang2014} was proposed. The schema exploits the different mobility patterns of the two category of vehicles, taxicabs and buses. Furthermore, a global traffic distribution is used to create cluster regions and forward the message through them. However those clusters are dynamic and a maintenance overhead is generated, moreover, the method requires the global traffic distribution which may not be available. These requirements can impact negatively in the scheme performance or even make it become impracticable.
+
+A lightweight vehicular ontology was proposed in CAOVA \cite{caova2012} with the aim of share and reuse information about accidents. Based on the ontology they generate warnings to improve the safety in the road. Similarly \cite{groza2014} propose a vehicular network ontology to facilitate the interoperability in an application level. Both show the capabilities of ontologies, the first looking for enhancements in the collect, representation and use of information to prevent accidents, while the other tries to embrace any application in the vehicular environment (e.g., safety, infotainment).
+
+The aforementioned studies, separately, proposed solutions to achieve our goals. They use context information like position, speed and category to improve the opportunistic forwarding and a ontology to ensure interoperability and be able exchange a lot of information using a simple class (e.g., private car, means that the is a car with four wheels (relevant for toll charging), it is a personal car, plus any required information). In this study we intend to join the ideas of those approaches reaching an improvement by adding a mechanism to deal with the different traffic flows.
+
+\section{Defining car's and environment's context Information}
+
+Dey \cite{dey2001} defines context as any information that can be used to characterize the situation of an entity. An entity is a person, a place, or an object that is considered relevant to the interaction between an user and an application, including the user and applications themselves.” A system that make use of this sort of information may achieve improvements in the quality of information and services to the user, those systems are called context-aware systems.
+
+ Context-aware systems are systems that are able to adapt to  different situations, or context, without user intervention, thus having better performance \cite{baldauf2007}. Using additional information of the environment make possible to detect or prevent hazardous situations, moreover, the context can also be useful in the knowledge distribution over a vehicular network \cite{tocadas2010}.
+
+The environment information can be divided into static (e.g., road signs, number of lanes), dynamic (e.g., speed, direction or any information about the vehicle motion) and environmental (information about the weather, e.g., wind speed, range of visibility). Additionally, the utilization of sensors, embedded in vehicles, such as GPS (Global Positioning System), infrared and laser sensors make it possible to collect information like wheel friction, vehicle speed and acceleration and the position of the vehicle. Furthermore, a smart car would monitor the environment, predict some hazardous situations or provide information to be used in the forward decision \cite{tocadas2010}.
+
+An opportunistic network, i.e. a network that aims to take advantage of opportunistic encounters (not scheduled) to exchange data, enables vehicles to share and use context information. Hence the delivery rate of the message is improved \cite{geoopp2014}. Being aware of the neighbors and message destination positions, a node can forward incoming messages towards its destination picking the node geographically closer to the destination \cite{gpsr2000}. Thus, the message can be forward accurately using only information about immediate neighbors \cite{magf2009}. 
+
+The Table \ref{context} shows some of those information, regarding the \emph{driver},  the \emph{environment} and the \emph{vehicles}. The second column show some features of these entities and the third column provides some examples of values that they may assume. According to the availability of those information they can be used to improve applications implemented in VANETs, like safety, advertising and entertainment. In the following section we show a model used that can be used to represent those information and facilitate some reasoning on them.
+
+% Please add the following required packages to your document preamble:
+% \usepackage{multirow}
+\begin{table}[ht]
+\centering
+\caption{Context information subset} \label{context}
+\begin{tabular}{|c|l|l|}
+\hline
+Entity                       & \multicolumn{1}{c|}{Feature} & \multicolumn{1}{c|}{Value}          \\ \hline
+\multirow{4}{*}{Driver}      & Age                          & under\_18; 18-65; 65+               \\ \cline{2-3} 
+                             & Behavior                     & prudent, reckless                   \\ \cline{2-3} 
+                             & Condition                    & drunk, fatigued, normal             \\ \cline{2-3} 
+                             & Mood                         & anxious, calm, stressed             \\ \hline
+\multirow{5}{*}{Environment} & Road Conditions              & dry, flooded, snow, wet             \\ \cline{2-3} 
+                             & Road Type                    & dual carriage way, one way          \\ \cline{2-3} 
+                             & Traffic Density              & low, medium, high                   \\ \cline{2-3} 
+                             & Time                         & out\_peak\_time, peak\_time         \\ \cline{2-3} 
+                             & Weather Condition            & fog, raining, snowing               \\ \hline
+\multirow{5}{*}{Vehicle}     & Category                     & bus, cargo, private car, taxi       \\ \cline{2-3} 
+                             & Condition                    & brake, engine, headlights \\ \cline{2-3} 
+                             & Movement                     & acceleration, heading, speed        \\ \cline{2-3} 
+                             & Size                         & length, width, height, mass         \\ \cline{2-3} 
+                             & Trip                         & contacts, path history, position    \\ \hline
+\end{tabular}
+\end{table}
+
+\section{Using ontology to categorization of vehicles}
+
+Ontology is a way to represent data and is used to distinguish between different kinds of objects, the relations among them and typically has different meanings depending on context. The Ontology provides a common vocabulary to enable interoperability, resolve ambiguity and hence the description of concepts and the relations that can exist between them, proving the benefits of use them \cite{madkour2011}.
+
+A single ontology for a area is not sufficient, there is a demand of distinct ontologies for the different fields of knowledge, otherwise they can grow fast and require increasing amounts of resources to host, manage, and use. Consequently, there are more than one type of ontology, classified according to level of detailed knowledge they provide \cite{packer2010}. Therefore we have more than one ontology for the vehicular scenario (e.g., for sales, used cars, manufacture)
+
+An context ontology can be used as a formal context model that allows an efficient gathering, managing and storing of the context information. Likewise, it provides interoperability in heterogeneous systems, by defining a common set of concepts about context while interacting. It also enables reasoning mechanisms to infer high-level information from a raw context, find and solve inconsistencies, plus it facilitates the reuse of the knowledge \cite{serrano2007}.
+
+%A Greedy Forwarding proposal enhanced with speed, direction and category is proposed in the next section, in order to improve the delivery rate and time, and the resource usage.
+
+%\section {Mobility and Category Aware Greedy Forwarding - MOCAGF}
+
+%\section{Simulating the influence of characteristics on packets forwarding}
+
+\section{Performance Evaluation}
+
+Assessing VANET applications in real world environments can be very costly, thus, in this paper we perform simulations to validate our proposal. We use \emph{SUMO} \cite{sumo2014} to create the mobility model, including the environment, the number of vehicles, their positions, speed, acceleration and routes. To simulate the communication between the vehicles and the network by itself we use the framework \emph{Veins} \cite{veins2014} on top of \emph{OMNET++} simulator \cite{omnet2014}.
+
+The parameters used during the forwarding process are described in the Table \ref{simulation-param}.
+
+% Please add the following required packages to your document preamble:
+% \usepackage[table,xcdraw]{xcolor}
+% If you use beamer only pass "xcolor=table" option, i.e. %\documentclass[xcolor=table]{beamer}
+
+\begin{table}[ht]
+\centering
+\caption{Simulation Parameters} \label{simulation-param}
+\begin{tabular}{|c|c|}
+\hline
+Frequency                      & 5.890GHz                                  \\ \hline
+Packet format                  & WAVE short message                        \\ \hline
+Status beacon Interval         & 1 second                                  \\ \hline
+Validity of status beacons     & 3 seconds                                 \\ \hline
+Message beacon interval        & 30 seconds                                \\ \hline
+Beacon Length                  & \textbf{to define} \\ \hline
+Destination Address            & (495,495)                                 \\ \hline
+Transmission range of vehicles & 125 meters                                \\ \hline
+Simulation time                & 600 seconds                               \\ \hline
+Maximum number of hops         & 10 hops                                   \\ \hline
+\end{tabular}
+\end{table}
+
+% \subsection{Simulation Setup}
+
+In our approach we assume that each vehicle is able to collect the required context information about itself and store information received from its neighbors. Furthermore, the context information shared among the vehicles is reliable, since security is not the focus of this work. Based on that, above we describe the simulation setup including the propagation, mobility, and network models.
+
+\subsection{Propagation Model}
+
+We have adopted the standard IEEE 802.11p, as a guideline to the physical and MAC layers, and the IEEE 1609.4 to maintain multiple channel operations. The signal propagation was made according to the Simplified Path-Loss model, described in \cite{tse2005} as model that captures the essence of signal propagation without complex analysis or empirical  measurements, demands a reduced computational effort and is indicated to high level analysis. Thus, the model was considered suitable to our simulations. Additionally, to implement the signal shadowing effects and the signal blocking due to obstacles, such as buildings, the Simple Obstacle Shadowing model from Veins was used.
+
+
+\subsection{Mobility Model} 
+
+We developed a scenario that consists of a grid of 1 km$^2$ (an urban area). A total of 50 vehicles were inserted in that environment. In order to evaluate the influence of the different categories of vehicles in the forwarding decision 10 of those are classified as taxis, and 40 as private cars. The routes of the private cars consist going to a specific point in the scenario (e.g., work) and returning to the start point (e.g., house) by the same route, this process is repeated until the end of the simulation. While the taxis routes are random, since the taxi movement is governed by the passenger demand. The vehicles maximum speed can be 15m/s or 25m/s, depending on the experiment conducted.
+
+\subsection{Network Model}
+
+ This simulation can be divided in two different phases, Discovery and Forwarding, wherein the vehicles collect data from its neighbors and used the information to make forward decisions, respectively.
+
+
+\subsubsection{Discovery Phase}
+
+The first step of the proposal is to discovery who is in the vehicle surroundings, and create a \emph{neighbors table}. That table is responsible for maintain the neighbors information and consist of their \emph{id}, current and a previous \emph{geographical position}, category, speed and the timestamp of the information. To exchange those information each vehicle broadcast its information, with an interval of 1 second, in a message called \emph{status beacon}. When a vehicle receives a \emph{status beacon}, it can either store it as a new entry in the table or update an entry if it already exists. Messages with more than 3 seconds in the table are discarded. Provided with this table the vehicle is able to make more accurate decisions in the Forwarding Phase.
+
+\subsubsection{Forwarding Phase}
+
+In the second step the message is forwarded, using \emph{neighbors table} information, to improve the forwarding decisions. Random vehicles are chosen to create the messages at simulation start. Thus, as soon as the vehicle join the simulation it will create the messages and a schedule to try to send its messages with a 5 seconds interval. The vehicle will try to send the message to the neighbor with the best probability to delivery the message. If the destination is one of the neighbor the message is delivery to it. Otherwise, if the own vehicle is the best to carry the message it will keep it until find someone better to carry it. The messages have a maximum time allowed in the simulation (60 or 120), if this number is reached the message is discarded from the buffer. Also, if a node receives a message and its buffer is full the older message is discarded.
+
+The decision make process was divided in four different schemes to evaluate the influence of the context information and the mechanism adopted in the results. In the first schema the node with the shortest distance to the destination was chosen to carry the message. In addition to the distance, the speed of the nodes were used in the decision make in the second approach. In the third another information was exploited, the categories \emph{taxi} and \emph{private car} aforementioned and its respective mobility patterns. And finally in the fourth schema a mechanism, called \emph{RateTimeToSend} was implemented to deal with traffic flow changing.
+
+It was considered that, due to its wide and flexible mobility, the \emph{taxi} has a higher chance to deliver the message successfully compared to the \emph{private cars}. To exploit this, preventing the \emph{taxis} to be overloaded, in the decision make the \emph{taxis} had a 80\% chance of being selected. Regarding the \emph{RateTimeToSend} it is a rate linked to the vehicle speed, that prevent a network flooding when a vehicle is moving slowly (e.g., in a traffic jam) controlling the amount messages forwarded. Initially its value will be 100ms to all vehicles, so the vehicle will try to forward a message, the first in the buffer, every 100ms. That value will be increased in 100ms if the vehicle don't move 10 meters in 1 second, otherwise, the value will be decreased in 100ms. The rate will remain between 100ms and 5seconds.
+
+
+%Experimentos
+
+%direção em todos...
+%1- Distância
+%2- Distância e velocidade
+%3- Distância, velocidade e categoria
+%4- Distância, velocidade, categoria, RateTimetoSend
+%5- Epidemic (em desenvolvimento)
+
+
+\subsection{Scenario}
+
+We decided to evaluate the experiments using an fixed point, in that case a RSU, to be message destination. The destination point is positioned in the middle of the scenario and the vehicles, either private cars or taxis, started at random places. The process has a total a 10 minutes of simulation and the maximum number of messages in the message buffer is of 50 messages. Additionally the message interval (beacons interval) is 5 seconds. (if there's enough space, add and image about that information). 
+
+As demonstrated in the Table \ref{table-ex} a total of 32 experiments are conducted, being 8 different combinations and 4 replications of each. At each of those replications new vehicles were selected to be generators the messages. Depending on the number of experiments the number of vehicles that generate the message can either 2 or 4.
+
+\begin{table}[ht]
+\centering
+\caption{Experiments Table} \label{table-ex}
+\begin{tabular}{|c|c|c|c|}
+\hline
+\begin{tabular}[c]{@{}c@{}}Experiment\\ Number\end{tabular} & \begin{tabular}[c]{@{}c@{}}Veh speed\\ (m/s)\end{tabular} & \begin{tabular}[c]{@{}c@{}}Time to delete\\ the message\end{tabular} & \begin{tabular}[c]{@{}c@{}}Generated\\ messages\end{tabular} \\ \hline
+1                                                           & 15                                                        & 60                                                                   & 2                                                            \\ \hline
+2                                                           & 15                                                        & 60                                                                   & 4                                                            \\ \hline
+3                                                           & 15                                                        & 120                                                                  & 2                                                            \\ \hline
+4                                                           & 15                                                        & 120                                                                  & 4                                                            \\ \hline
+5                                                           & 25                                                        & 60                                                                   & 2                                                            \\ \hline
+6                                                           & 25                                                        & 60                                                                   & 4                                                            \\ \hline
+7                                                           & 25                                                        & 120                                                                  & 2                                                            \\ \hline
+8                                                           & 25                                                        & 120                                                                  & 4                                                            \\ \hline
+\end{tabular}
+\end{table}
+
+\section{Simulation Results}
+
+\subsubsection{First Metric}
+
+latency
+msg descartadas
+mensagens entregues
+
+\subsubsection{Second Metric}
+
+% An example of a floating figure using the graphicx package.
+% Note that \label must occur AFTER (or within) \caption.
+% For figures, \caption should occur after the \includegraphics.
+% Note that IEEEtran v1.7 and later has special internal code that
+% is designed to preserve the operation of \label within \caption
+% even when the captionsoff option is in effect. However, because
+% of issues like this, it may be the safest practice to put all your
+% \label just after \caption rather than within \caption{}.
+%
+% Reminder: the "draftcls" or "draftclsnofoot", not "draft", class
+% option should be used if it is desired that the figures are to be
+% displayed while in draft mode.
+%
+%\begin{figure}[!t]
+%\centering
+%\includegraphics[width=2.5in]{myfigure}
+% where an .eps filename suffix will be assumed under latex, 
+% and a .pdf suffix will be assumed for pdflatex; or what has been declared
+% via \DeclareGraphicsExtensions.
+%\caption{Simulation Results}
+%\label{fig_sim}
+%\end{figure}
+
+% Note that IEEE typically puts floats only at the top, even when this
+% results in a large percentage of a column being occupied by floats.
+
+% An example of a floating table. Note that, for IEEE style tables, the 
+% \caption command should come BEFORE the table. Table text will default to
+% \footnotesize as IEEE normally uses this smaller font for tables.
+% The \label must come after \caption as always.
+%
+%\begin{table}[!t]
+%% increase table row spacing, adjust to taste
+%\renewcommand{\arraystretch}{1.3}
+% if using array.sty, it might be a good idea to tweak the value of
+% \extrarowheight as needed to properly center the text within the cells
+%\caption{An Example of a Table}
+%\label{table_example}
+%\centering
+%% Some packages, such as MDW tools, offer better commands for making tables
+%% than the plain LaTeX2e tabular which is used here.
+%\begin{tabular}{|c||c|}
+%\hline
+%One & Two\\
+%\hline
+%Three & Four\\
+%\hline
+%\end{tabular}
+%\end{table}
+
+\section{Conclusion}
+The conclusion goes here. this is more of the conclusion
+
+% use section* for acknowledgement
+\section*{Acknowledgment}
+
+The authors would like to thank...
+more thanks here
+
+\bibliographystyle{IEEEtran}
+\bibliography{refs}
+
+\end{document}
