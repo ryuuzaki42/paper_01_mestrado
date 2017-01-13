@@ -198,7 +198,7 @@ To evaluate the success of \emph{MFCV}, we used three metrics: delivery success 
 
 In the first experiment, we compared \emph{MFCV} by exploiting different context information, with the \emph{Epidemic} protocol measuring the number of messages that reached the destination. Since \emph{Epidemic} is a sort of controlled flooding, its successful delivery rate is very high, so our goal was to reach closer to its results.
 
-In this experiment, a vehicle was chosen to create a message every 15 seconds, for delivery, generating a total of 30 messages. 
+In this experiment, a vehicle was chosen to create a message every 15 seconds, for delivery, generating a total of 30 messages.
 As seen in \autoref{grafico1} the combine \emph{DSC} (distance, speed, and category) shows an improvement of approximately 6\% when compared to the basic D (distance) and is 9\% below the performance of \emph{Epidemic}. Increasing the number of generated message to 60 with the TTL equal to 60 seconds, we get same results for \emph{D}, \emph{DS} and \emph{DSC}, but 6\% below the \emph{Epidemic} performance. Increasing the TTL to 120 seconds, the results of \emph{DSC} shows 5\% better performance than \emph{D} and \emph{DS}, but 12\% below \emph{Epidemic}. We compared both \emph{Epidemic} and \emph{DSC}, with 60 generated messages, increasing message TTL to 150 seconds, and the results displayed in \autoref{grafico2} show 100\% delivery success rate to \emph{Epidemic} and 98\% to our approach.
 
 \begin{figure}[thpb]
